@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/public/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/public/script.js"></script>
+  
+  <title>Pictochat</title>
+</head>
+<body>
+
+  <div class="blue-bar top-blue-bar">
+    <h1>Choose a Chat Room to join.</h1>
+  </div>
+  
+  <div class="rooms-list">
+    <div class="btn-join-container"><button class="btn-join" id="join-A">Chat Room A</button></div>
+    <div class="btn-join-container"><button class="btn-join" id="join-B">Chat Room B</button></div>
+    <div class="btn-join-container"><button class="btn-join" id="join-C">Chat Room C</button></div>
+    <div class="btn-join-container"><button class="btn-join" id="join-D">Chat Room D</button></div>
+  </div>
+  
+  <div class="blue-bar bot-blue-bar">
+    <input id="pseudo" type="text" placeholder="Entrez pseudo">
+    <input id="couleur" type="color">
+    <button id="edit_profil">Valider</button>
+  </div>
+
+</body>
+</html>

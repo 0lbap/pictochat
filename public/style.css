@@ -1,0 +1,101 @@
+body{
+  background-color: #C4C4C4;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.blue-bar{
+  height: 4em;
+  width: 100vw;
+  text-align: center;
+}
+
+.blue-bar h1{
+  margin: 0;
+}
+
+.top-blue-bar{
+  background-image: linear-gradient(#99C7E8, #5989AB);
+}
+
+.bot-blue-bar{
+  background-image: linear-gradient(#5989AB, #99C7E8);
+}
+
+.rooms-list{
+  height: calc(100vh - 4em - 4em - 2em);
+  display: grid;
+  gap: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.btn-join {
+  height: 100%;
+  width: 75%;
+}
+
+.btn-join-container{
+  text-align: center;
+}
+
+.msg-block{
+  background-color: white;
+  margin: 0.5em;
+  border-radius: 0.2em;
+}
+
+.msg-pseudo{
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+
+.msg-content{
+  
+}
+
+#msg-bar{
+  margin: 0.5em;
+  position: absolute;
+  bottom: 0;
+}
+
+#chat{
+  height: calc(100% - 2em);
+  overflow-y: scroll;
+  overflow-x: clip;
+}
+
+#connectedUsers {
+  display: inline-block;
+  height: 0px;
+  margin: 0;
+  padding: 0;
+    padding-top: 0px;
+  padding-top: 0.5em;
+}
+
+#connectedUsers li {
+  display: inline;
+  margin: 0;
+  padding: 0.5em;
+}
+
+#connectedUsersContainer {
+  text-align: right;
+  background-color: #e9e9e9;
+  height: 2em;
+}
+
+.carre {
+  width: 0.5em;
+  height: 0.5em;
+  background-color: #ffffff;
+  display: inline-block;
+  border: 1px solid black;
+  margin-right: 0.2em;
+}
