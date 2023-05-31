@@ -16,10 +16,6 @@ app.get("/public/:fileName", (request, response) => {
   response.sendFile("public/" + request.params.fileName, { root: __dirname });
 });
 
-app.get("/tchat", (request, response) => {
-  response.sendFile("public/tchat.html", { root: __dirname });
-})
-
 http.listen(8000, () => {
   console.log("Écoute sur le port 8000");
 });
@@ -131,7 +127,7 @@ io.on("connection", (socket) => {
   });
 
   // SENDING MSG
-  socket.on("send", (msg) => {
+  socket.on("sendmsg", (msg) => {
     for(let i=0; i<roomA.length; i++) {
       if(roomA[i].id == socket.id) {
         io.to("roomA").emit("msg", roomA[i].pseudo, roomA[i].couleur, msg);
@@ -154,8 +150,32 @@ io.on("connection", (socket) => {
     }
   });
 
-  // EDITING PROFIL
-  socket.on("edit_profil", (newpseudo, newcouleur) => {
+  // SENDING DRAWING
+  socket.on("senddrawing", (drawing) => {
+    for(let i=0; i<roomA.length; i++) {
+      if(roomA[i].id == socket.id) {
+        io.to("roomA").emit("drawing", roomA[i].pseudo, roomA[i].couleur, drawing);
+      }
+    }
+    for(let i=0; i<roomB.length; i++) {
+      if(roomB[i].id == socket.id) {
+        io.to("roomB").emit("drawing", roomB[i].pseudo, roomB[i].couleur, drawing);
+      }
+    }
+    for(let i=0; i<roomC.length; i++) {
+      if(roomC[i].id == socket.id) {
+        io.to("roomC").emit("drawing", roomC[i].pseudo, roomC[i].couleur, drawing);
+      }
+    }
+    for(let i=0; i<roomD.length; i++) {
+      if(roomD[i].id == socket.id) {
+        io.to("roomD").emit("drawing", roomD[i].pseudo, roomD[i].couleur, drawing);
+      }
+    }
+  });
+
+  // EDITING PROFILE
+  socket.on("edit_profile", (newpseudo, newcouleur) => {
     for(let i=0; i<roomA.length; i++) {
       if(roomA[i].id == socket.id) {
         roomA[i].pseudo = newpseudo;

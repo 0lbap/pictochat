@@ -14,7 +14,7 @@ window.onload = function() {
     $("#join-D").text("Chat Room D (" + tailleDe.roomD + "/16)");
   });
 
-  $("#edit_profil").on("click", () => {
+  $("#edit_profile").on("click", () => {
     if($("#pseudo").val() != "") {
       pseudo = $("#pseudo").val();
       $("#pseudo").val("");
@@ -23,7 +23,7 @@ window.onload = function() {
       couleur = $("#couleur").val();
       $("#couleur").val(couleur);
     }
-    socket.emit("edit_profil", pseudo, couleur);
+    socket.emit("edit_profile", pseudo, couleur);
     console.log("Profil modifié : ");
     console.log("pseudo=" + pseudo + ",couleur=" + couleur);
   });
@@ -61,26 +61,80 @@ function showChat() {
   html+='<div id="connectedUsersContainer"><ul id="connectedUsers"></ul></div>';
   html+='<div id="chat"></div>';
   html+='<div id="msg-bar">';
-  html+= '<input id="msg" type="text" placeholder="Message...">';
+  html+='<svg id="drawing"></svg>';
+  html+='<br/>';
+  html+='<input id="msg" type="text" placeholder="Votre message...">';
   html+='<button id="send">Envoyer</button>';
-  html+='<button onclick="$(\'#chat\').empty()">Clear</button>';
+  html+='<br/>';
+  html+='<button onclick="$(\'#chat\').empty()">Vider le tchat</button>';
+  html+='<button onclick="$(\'#drawing\').empty()">Supprimer le dessin</button>';
   html+='</div>';
   $("body").append(html);
   $("#send").on("click", () => {
-    let msg = $("#msg").val();
-    $("#msg").val("");
-    console.log("Sending msg '" + msg + "'");
-    socket.emit("send", msg);
+    if($("#drawing").children().length > 0) {
+      let svgString = exportSVG();
+      $("#drawing").empty();
+      console.log("Sending drawing");
+      socket.emit("senddrawing", svgString);
+    }
+    if($("#msg").val() != "") {
+      let msg = $("#msg").val();
+      $("#msg").val("");
+      console.log("Sending message '" + msg + "'");
+      socket.emit("sendmsg", msg);
+    }
   });
 
   html = "";
   html += '<div class="msg-block" style="border: 1px solid white; background-color: gray">';
-  html += '<span class="msg-content" style="color: lightgray">PICTOCHAT</span>';
+  html += '<span class="msg-pseudo" style="color: lightgray">PICTOCHAT</span>';
   html += '</div>';
   $("#chat").append(html);
   
+  const svg = d3.select("#drawing");
+
+  let isDrawing = false;
+  let startX, startY;
+
+  svg
+    .on("mousedown", (event) => {
+      isDrawing = true;
+      startX = event.offsetX;
+      startY = event.offsetY;
+    })
+    .on("mouseup", () => {
+      isDrawing = false;
+    })
+    .on("mousemove", (event) => {
+      if (isDrawing) {
+        const currentX = event.offsetX;
+        const currentY = event.offsetY;
+
+        svg
+          .append("line")
+          .attr("x1", startX)
+          .attr("y1", startY)
+          .attr("x2", currentX)
+          .attr("y2", currentY)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
+
+        startX = currentX;
+        startY = currentY;
+      }
+    });
+  
+  function exportSVG() {
+    const svgString = $("#drawing").html();
+    return svgString;
+  }
+
   socket.on("msg", (pseudo, couleur, msg) => {
     showMsg(pseudo, couleur, msg);
+  });
+
+  socket.on("drawing", (pseudo, couleur, drawing) => {
+    showDrawing(pseudo, couleur, drawing);
   });
 
   socket.on("sysmsg", (title, msg) => {
@@ -110,8 +164,17 @@ function showChat() {
 
 function showMsg(pseudo, couleur, msg) {
   let html = '<div class="msg-block" style="border: 1px solid ' + couleur + '">';
-  html += '<span class="msg-pseudo" style="background-color:' + couleur + '; border: 2px solid ' + couleur + '">' + pseudo + '</span>';
+  html += '<span class="msg-pseudo" style="background-color:' + couleur + ';">' + pseudo + '</span>';
   html += '<span class="msg-content">' + msg + '</span>';
+  html += '</div>';
+  $("#chat").append(html);
+  document.getElementById("chat").scrollTo(0,document.getElementById("chat").scrollHeight);
+}
+
+function showDrawing(pseudo, couleur, drawing) {
+  let html = '<div class="msg-block" style="border: 1px solid ' + couleur + '">';
+  html += '<span class="msg-pseudo" style="background-color:' + couleur + ';">' + pseudo + '</span>';
+  html += '<svg>' + drawing + '</svg>';
   html += '</div>';
   $("#chat").append(html);
   document.getElementById("chat").scrollTo(0,document.getElementById("chat").scrollHeight);
